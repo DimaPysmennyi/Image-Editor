@@ -8,11 +8,19 @@ class App(customtkinter.CTk):
         self.HEIGHT = 400
         self.geometry(f"{self.WIDTH}x{self.HEIGHT}+{0}+{100}")
         self.title("TriangleSheep")
-        # self.FRAME = customtkinter.CTkFrame(master=self, border_width=3, border_color="orange", width=self.WIDTH-150, height=self.HEIGHT-40)
-        # self.FRAME.place(x=150, y=40)
         self.resizable(False, False)
-        self.TABVIEW = customtkinter.CTkTabview(master=self, width = 450, height = 400)
-        self.TABVIEW.place(x=150, y=-10)
+        # self.TABVIEW = customtkinter.CTkTabview(
+        #     master = self,
+        #     width = 590,
+        #     height = 400,
+        #     segmented_button_fg_color = "orange",
+        #     segmented_button_selected_color = "#d36f23",
+        #     segmented_button_selected_hover_color = "#c67538"
+        # )
+        # self.TABVIEW.place(x=5, y=-10)
+        self.CURRENT_IMAGE = None# eron don don
+        self.IMAGE_LABEL = None
+
 
 
 main_app = App()
