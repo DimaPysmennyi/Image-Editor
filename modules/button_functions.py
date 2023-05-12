@@ -1,5 +1,9 @@
 import customtkinter, requests, modules.app
 from PIL import Image
+from PIL import ImageFilter
+from PIL import ImageDraw
+from PIL import ImageFont
+
 counter = 0
 url_loading = None
 point_counter = 0
@@ -11,8 +15,8 @@ def picture():
         def url():
             global url_loading
             url_loading = True
-            button_afile.place_forget()
-            button_burl.place_forget()
+            button_file.place_forget()
+            button_url.place_forget()
             window.place(x=100, y=150)
             button_open.place(x = 400, y = 150)
 
@@ -21,8 +25,8 @@ def picture():
         def local_file():
             global url_loading
             url_loading = False
-            button_afile.place_forget()
-            button_burl.place_forget()
+            button_file.place_forget()
+            button_url.place_forget()
             pressing_button_file()
             
 
@@ -69,8 +73,8 @@ def picture():
                 modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image=b)
                 modules.app.main_app.IMAGE_LABEL.place(x=150, y=0)
                 # window.unbind('<Return>')
-                info_frame = customtkinter.CTkFrame(master=modules.app.main_app, width=140, height=100)
-                info_frame.place(x=5, y=260)
+                info_frame = customtkinter.CTkFrame(master=modules.app.main_app, width=140, height=70)
+                info_frame.place(x=5, y=325)
                 info_dict = {
                     "Size": img.size, 
                     "Format": img.format, 
@@ -89,7 +93,7 @@ def picture():
         
             
 
-        button_afile = customtkinter.CTkButton(
+        button_file = customtkinter.CTkButton(
             master=modules.app.main_app, 
             width=150, 
             height=50, 
@@ -101,7 +105,7 @@ def picture():
             command = local_file
         )
 
-        button_burl = customtkinter.CTkButton(
+        button_url = customtkinter.CTkButton(
             master=modules.app.main_app, 
             width=150, 
             height=50, 
@@ -113,8 +117,8 @@ def picture():
             command = url
         )   
 
-        button_afile.place(x = 150, y = 150)
-        button_burl.place(x = 150, y = 205)
+        button_file.place(x = 150, y = 150)
+        button_url.place(x = 150, y = 205)
         
         text = customtkinter.StringVar()
         window = customtkinter.CTkEntry(master=modules.app.main_app, width=300, height=50, textvariable=text)
@@ -215,10 +219,124 @@ def picture_crop():
     confirm.place(x = 5, y = 370)
 
 def filters():
-    modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.convert("L")
-    a_b = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
-    # modules.app.main_app.IMAGE_LABEL.place_forget()
-    modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image=a_b, width = 450, height = 400)
+    frame = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 400)
+    def grayscale():
+        modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.convert("L")
+        img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
+        modules.app.main_app.IMAGE_LABEL.place_forget()
+        modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image=img, width = 450, height = 400)
+        modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
+        frame.place_forget()
+
+    def blur():
+        modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.filter(ImageFilter.BLUR)
+        img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
+        modules.app.main_app.IMAGE_LABEL.place_forget()
+        modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image=img, width = 450, height = 400)
+        modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
+        frame.place_forget()
+
+    def sharpen():
+        modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.filter(ImageFilter.SHARPEN)
+        img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
+        modules.app.main_app.IMAGE_LABEL.place_forget()
+        modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image=img, width = 450, height = 400)
+        modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
+        frame.place_forget()
+    
+    def smooth():
+        modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.filter(ImageFilter.SMOOTH)
+        img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
+        modules.app.main_app.IMAGE_LABEL.place_forget()
+        modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image=img, width = 450, height = 400)
+        modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
+        frame.place_forget()
+
+    def detail():
+        modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.filter(ImageFilter.DETAIL)
+        img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
+        modules.app.main_app.IMAGE_LABEL.place_forget()
+        modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image=img, width = 450, height = 400)
+        modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
+        frame.place_forget()
+
+    grayscale_button = customtkinter.CTkButton(
+        master = frame, width = 190, height = 50, text = "Чорно-білий", command=grayscale,
+        fg_color = "#302f2b",
+        border_color = "#d36f23",
+        hover_color = "#c67538",
+        border_width = 3
+    )
+    
+    blur_button = customtkinter.CTkButton(
+        master = frame, width = 190, height = 50, text = "Розмиття", command=blur,
+        fg_color = "#302f2b",
+        border_color = "#d36f23",
+        hover_color = "#c67538",
+        border_width = 3                                   
+    )
+
+    sharpen_button = customtkinter.CTkButton(
+        master = frame, width = 190, height = 50, text = "Різкість", command=sharpen,
+        fg_color = "#302f2b",
+        border_color = "#d36f23",
+        hover_color = "#c67538",
+        border_width = 3
+    )
+    
+    smooth_button = customtkinter.CTkButton(
+        master = frame, width = 190, height = 50, text = "Згладжування", command=smooth,
+        fg_color = "#302f2b",
+        border_color = "#d36f23",
+        hover_color = "#c67538",
+        border_width = 3,                             
+    )
+    
+    detail_button = customtkinter.CTkButton(
+        master = frame, width = 190, height = 50, text = "Деталізація", command=detail,
+        fg_color = "#302f2b",
+        border_color = "#d36f23",
+        hover_color = "#c67538",
+        border_width = 3
+    )
+
+    grayscale_button.place(x = 5, y = 20)
+    blur_button.place(x = 5, y = 80)
+    sharpen_button.place(x = 5, y = 140)
+    smooth_button.place(x = 5, y = 200)
+    detail_button.place(x = 5, y = 260)
+    
+    frame.place(x = 150, y = 0)
+def rotate():
+    modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.rotate(90)
+    img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
+    modules.app.main_app.IMAGE_LABEL.place_forget()
+    modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image=img, width = 450, height = 400)
     modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
 
+# snus kriminal papararara
+
+def text():
+    mouse_x = None
+    mouse_y = None
+    def mouse_pressed(event):
+        global mouse_x, mouse_y
+        mouse_x = modules.app.main_app.winfo_pointerx()
+        mouse_y = modules.app.main_app.winfo_pointery()
+        print(mouse_x, mouse_y)
+        entry.place(x = mouse_x, y = mouse_y)
     
+    def entry_pressed(event):
+        modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.text((mouse_x, mouse_y), text.get(), font=font)
+        img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
+        modules.app.main_app.IMAGE_LABEL.place_forget()
+        modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image = img, width = 450, height = 400)
+        modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
+        entry.place_forget()
+    # frame = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 400, border_width = 3)
+    modules.app.main_app.IMAGE_LABEL.bind("<Button-1>", mouse_pressed)
+    text = customtkinter.StringVar()
+    entry = customtkinter.CTkEntry(master = modules.app.main_app, width = 190, height = 100, textvariable = text) 
+    font = ImageFont.truetype("arial.ttf", size=18)
+    
+    entry.bind("<Return>", entry_pressed)
