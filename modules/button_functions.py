@@ -197,26 +197,32 @@ def picture_crop():
     pointy2 = customtkinter.StringVar()
 
     entry = customtkinter.CTkEntry(master = frame, width = 190, height = 100, textvariable = pointx1) 
-    entry2 = customtkinter.CTkEntry(master = frame, width = 190, height = 100, textvariable = pointx2) 
-    entry3 = customtkinter.CTkEntry(master = frame, width = 190, height = 100, textvariable = pointy1) 
+    entry2 = customtkinter.CTkEntry(master = frame, width = 190, height = 100, textvariable = pointy1) 
+    entry3 = customtkinter.CTkEntry(master = frame, width = 190, height = 100, textvariable = pointx2) 
     entry4 = customtkinter.CTkEntry(master = frame, width = 190, height = 50, textvariable = pointy2)
     
     def crop_function():
         modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.crop((int(pointx1.get()), int(pointy1.get()), int(pointx2.get()), int(pointy2.get())))
         img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
-        # modules.app.main_app.IMAGE_LABEL.place_forget()
-        modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image=img, width = 450, height = 400)
+        modules.app.main_app.IMAGE_LABEL.place_forget()
+        modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image = img, width = 450, height = 400)
         modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
         frame.place_forget()
 
-    confirm = customtkinter.CTkButton(master = frame, width = 190, height = 30, text = "Обрізати", command=crop_function)
+    confirm = customtkinter.CTkButton(
+        master = frame, width = 190, height = 30, text = "Обрізати", command=crop_function,
+        fg_color = "#302f2b",
+        border_color = "#d36f23",
+        hover_color = "#c67538",
+        border_width = 3
+    )
     
     frame.place(x = 200, y = 0)
     entry.place(x = 5, y = 10)
     entry2.place(x = 5, y = 110)
     entry3.place(x = 5, y = 210) 
     entry4.place(x = 5, y = 310)
-    confirm.place(x = 5, y = 370)
+    confirm.place(x = 5, y = 360)
 
 def filters():
     frame = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 400)
@@ -319,6 +325,8 @@ def rotate():
 def text():
     mouse_x = None
     mouse_y = None
+    text_entry = customtkinter.StringVar()
+
     def mouse_pressed(event):
         global mouse_x, mouse_y
         mouse_x = modules.app.main_app.winfo_pointerx()
@@ -327,16 +335,17 @@ def text():
         entry.place(x = mouse_x, y = mouse_y)
     
     def entry_pressed(event):
-        modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.text((mouse_x, mouse_y), text.get(), font=font)
-        img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
-        modules.app.main_app.IMAGE_LABEL.place_forget()
-        modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image = img, width = 450, height = 400)
-        modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
-        entry.place_forget()
+        if text_entry.get():
+            modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.text((mouse_x, mouse_y), text_entry.get())
+            img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (450, 400))
+            modules.app.main_app.IMAGE_LABEL.place_forget()
+            modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image = img, width = 450, height = 400)
+            modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
+            entry.place_forget()
     # frame = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 400, border_width = 3)
     modules.app.main_app.IMAGE_LABEL.bind("<Button-1>", mouse_pressed)
-    text = customtkinter.StringVar()
-    entry = customtkinter.CTkEntry(master = modules.app.main_app, width = 190, height = 100, textvariable = text) 
+    
+    entry = customtkinter.CTkEntry(master = modules.app.main_app, width = 190, height = 100, textvariable = text_entry) 
     font = ImageFont.truetype("arial.ttf", size=18)
     
     entry.bind("<Return>", entry_pressed)
