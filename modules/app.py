@@ -22,7 +22,7 @@ class App(customtkinter.CTk):
         self.TOOLS = self.TABVIEW.add("Інструменти")
         self.CURRENT_IMAGE = None# eron don don
         self.IMAGE_LABEL = None
-
+        self.wm_iconbitmap("logo.ico")
 
 
 main_app = App()

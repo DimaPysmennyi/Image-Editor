@@ -1,8 +1,11 @@
 import customtkinter, requests, modules.app
 from PIL import Image
 from PIL import ImageFilter
-from PIL import ImageDraw
+from PIL import ImageDraw 
 from PIL import ImageFont
+from time import sleep
+
+button_font = customtkinter.CTkFont(family = "Arial", size = 20, weight = "normal")
 
 counter = 0
 url_loading = None
@@ -19,8 +22,9 @@ def picture():
         url_loading = True
         button_file.place_forget()
         button_url.place_forget()
-        window.place(x=100, y=150)
-        button_open.place(x = 400, y = 150)
+        window.place(x = 5, y = 50)
+        button_open.place(x = 5, y = 600)
+        
     def local_file():
         global url_loading
         url_loading = False
@@ -37,10 +41,12 @@ def picture():
             counter += 1
             # new_tab = modules.app.main_app.TABVIEW.add(f"Вкладка {counter}")
             b = customtkinter.CTkImage(light_image=modules.app.main_app.CURRENT_IMAGE, size = (930, 720))
+            
             try:
                 modules.app.main_app.IMAGE_LABEL.place_forget()
             except AttributeError:
                 pass
+
             modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image=b, width = 450, height = 400)
             modules.app.main_app.IMAGE_LABEL.place(x=150, y=0)
             window.place_forget()
@@ -57,11 +63,13 @@ def picture():
                 label = customtkinter.CTkLabel(master=info_frame, text=info)
                 label.place(x=0, y=label_y)
                 label_y += 20
+            
+            frame.place_forget()
             # return a
         except:
-            print("ахахахахха ти какашка")
+            label_error = customtkinter.CTkLabel(master = frame, text = "Некоректний URL!", text_color = "red", font = button_font)
+            label_error.place(x = 10, y = 200)
         
-        frame.place_forget()
 
     def pressing_button_file():
         global counter
@@ -124,20 +132,29 @@ def picture():
     button_file.place(x = 5, y = 50)
     button_url.place(x = 5, y = 160)
 
-    frame.place(x = 880, y = 0)
+    i = 1080
+    while i > 880:
+        # sleep(0.00001)
+        i -= 1
+        
+        modules.app.main_app.update()
+        frame.place(x = i, y = 0)
+        modules.app.main_app.update()
     
     text = customtkinter.StringVar()
-    window = customtkinter.CTkEntry(master=modules.app.main_app, width=300, height=50, textvariable=text)
+    window = customtkinter.CTkEntry(master = frame, width = 190, height=50, textvariable=text)
+
     button_open = customtkinter.CTkButton(
-        master=modules.app.main_app, 
-        width=150, 
-        height=50, 
+        master = frame, 
+        width=190, 
+        height=100, 
         text="Відкрити",
         fg_color = "#302f2b",
         border_color = "#d36f23",
         hover_color = "#c67538",
         border_width = 3,
-        command = pressing_button_url
+        command = pressing_button_url,
+        font=button_font
     )   
 
         # Dimka Perdimka
@@ -167,9 +184,10 @@ def save():
         height_entry = customtkinter.CTkEntry(master=window, width = 190, height = 50, textvariable=height_text)
 
 
-        filename_label = customtkinter.CTkLabel(master = window, text = "Ім'я файлу:")
-        width_label = customtkinter.CTkLabel(master = window, text = "Ширина зображення:")
-        height_label = customtkinter.CTkLabel(master = window, text = "Висота зображення:")
+
+        filename_label = customtkinter.CTkLabel(master = window, text = "Ім'я файлу:", font= button_font)
+        width_label = customtkinter.CTkLabel(master = window, text = "Ширина зображення:", font= button_font)
+        height_label = customtkinter.CTkLabel(master = window, text = "Висота зображення:", font= button_font)
 
         finish_button = customtkinter.CTkButton(
             master = window,
@@ -180,7 +198,8 @@ def save():
             border_color = "#d36f23",
             hover_color = "#c67538",
             border_width = 3, 
-            command = finished
+            command = finished, 
+            font= button_font
         )
 
         filename_entry.place(x = 5, y = 40)
@@ -191,7 +210,14 @@ def save():
         height_label.place(x = 5, y = 270)
         finish_button.place(x = 5, y = 600)
 
-        window.place(x = 880, y = 0)
+        i = 1080
+        while i > 880:
+            # sleep(0.00001)
+            i -= 1
+
+            modules.app.main_app.update()
+            window.place(x = i, y = 0)
+            modules.app.main_app.update()
 
 
 def picture_crop():
@@ -208,10 +234,10 @@ def picture_crop():
         entry3 = customtkinter.CTkEntry(master = frame, width = 190, height = 50, textvariable = pointx2) 
         entry4 = customtkinter.CTkEntry(master = frame, width = 190, height = 50, textvariable = pointy2)
 
-        left_margin = customtkinter.CTkLabel(master = frame, text = "x1:")
-        top_margin = customtkinter.CTkLabel(master = frame, text = "y1:")
-        right_margin = customtkinter.CTkLabel(master = frame, text = "x2:")
-        bottom_margin = customtkinter.CTkLabel(master = frame, text = "y2:")
+        left_margin = customtkinter.CTkLabel(master = frame, text = "x1:", font= button_font)
+        top_margin = customtkinter.CTkLabel(master = frame, text = "y1:", font= button_font)
+        right_margin = customtkinter.CTkLabel(master = frame, text = "x2:", font= button_font)
+        bottom_margin = customtkinter.CTkLabel(master = frame, text = "y2:", font= button_font)
 
         def crop_function():
             modules.app.main_app.CURRENT_IMAGE = modules.app.main_app.CURRENT_IMAGE.crop((int(pointx1.get()), int(pointy1.get()), int(pointx2.get()), int(pointy2.get())))
@@ -226,10 +252,18 @@ def picture_crop():
             fg_color = "#302f2b",
             border_color = "#d36f23",
             hover_color = "#c67538",
-            border_width = 3
+            border_width = 3,
+            font= button_font
         )
 
-        frame.place(x = 880, y = 0)
+        i = 1080
+        while i > 880:
+        # sleep(0.00001)
+            i -= 1
+        
+            modules.app.main_app.update()
+            frame.place(x = i, y = 0)
+            modules.app.main_app.update()
 
         entry.place(x = 5, y = 40)
         entry2.place(x = 5, y = 140)
@@ -291,7 +325,8 @@ def filters():
             fg_color = "#302f2b",
             border_color = "#d36f23",
             hover_color = "#c67538",
-            border_width = 3
+            border_width = 3, 
+            font= button_font
         )
 
         blur_button = customtkinter.CTkButton(
@@ -299,7 +334,8 @@ def filters():
             fg_color = "#302f2b",
             border_color = "#d36f23",
             hover_color = "#c67538",
-            border_width = 3                                   
+            border_width = 3,
+            font= button_font                              
         )
 
         sharpen_button = customtkinter.CTkButton(
@@ -307,7 +343,8 @@ def filters():
             fg_color = "#302f2b",
             border_color = "#d36f23",
             hover_color = "#c67538",
-            border_width = 3
+            border_width = 3,
+            font= button_font
         )
 
         smooth_button = customtkinter.CTkButton(
@@ -315,7 +352,8 @@ def filters():
             fg_color = "#302f2b",
             border_color = "#d36f23",
             hover_color = "#c67538",
-            border_width = 3,                             
+            border_width = 3,      
+            font= button_font                       
         )
 
         detail_button = customtkinter.CTkButton(
@@ -323,7 +361,8 @@ def filters():
             fg_color = "#302f2b",
             border_color = "#d36f23",
             hover_color = "#c67538",
-            border_width = 3
+            border_width = 3,
+            font= button_font
         )
 
         grayscale_button.place(x = 5, y = 20)
@@ -332,7 +371,14 @@ def filters():
         smooth_button.place(x = 5, y = 200)
         detail_button.place(x = 5, y = 260)
 
-        frame.place(x = 880, y = 0)
+        i = 1080
+        while i > 880:
+        # sleep(0.00001)
+            i -= 1
+        
+            modules.app.main_app.update()
+            frame.place(x = i, y = 0)
+            modules.app.main_app.update()
 
 def rotate():
     if modules.app.main_app.CURRENT_IMAGE:
@@ -360,9 +406,9 @@ def text():
         size_entry.place(x = 5, y = 130)
         color_entry.place(x = 5, y = 220)
 
-        text_label = customtkinter.CTkLabel(master = frame, text = "Текст:")
-        size_label = customtkinter.CTkLabel(master = frame, text = "Розмір тексту:")
-        color_label = customtkinter.CTkLabel(master = frame, text = "HEX-колір:")
+        text_label = customtkinter.CTkLabel(master = frame, text = "Текст:", font= button_font)
+        size_label = customtkinter.CTkLabel(master = frame, text = "Розмір тексту:", font= button_font)
+        color_label = customtkinter.CTkLabel(master = frame, text = "HEX-колір:", font= button_font)
 
         text_label.place(x = 5, y = 10)
         size_label.place(x = 5, y = 100)
@@ -381,7 +427,14 @@ def text():
             mouse_y = event.y
             print(mouse_x, mouse_y)
             
-            frame.place(x = 880, y = 0)
+            i = 1080
+            while i > 880:
+                # sleep(0.00001)
+                i -= 1
+                
+                modules.app.main_app.update()
+                frame.place(x = i, y = 0)
+                modules.app.main_app.update()
 
         def entry_pressed():
             if text_entry.get() and size_entry_text.get() and color_entry_text.get():
@@ -404,7 +457,8 @@ def text():
             fg_color = "#302f2b",
             border_color = "#d36f23",
             hover_color = "#c67538",
-            border_width = 3
+            border_width = 3,
+            font= button_font
         )
         confirm_button.place(x = 5, y = 600)
 
@@ -413,16 +467,6 @@ def text():
 
 
 def new_picture():
-    frame = customtkinter.CTkFrame(master=modules.app.main_app, width=200, height=720)
-    
-    width_var = customtkinter.StringVar()
-    height_var = customtkinter.StringVar()
-    
-    size_entry1 = customtkinter.CTkEntry(master = frame, width = 190, height = 50, textvariable = width_var)
-    size_entry2 = customtkinter.CTkEntry(master = frame, width = 190, height = 50, textvariable = height_var)
-
-
-
     # if width_var.get() and height_var.get():
     new_image = Image.new('RGBA', (930, 720), 'white')
     modules.app.main_app.CURRENT_IMAGE = new_image
@@ -448,106 +492,117 @@ def new_picture():
         label_y += 20
 
 def draw():
-    frame = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 720, border_width = 3)
-    frame.place(x = 880, y = 0)
-
-    def draw_oval():    
+    if modules.app.main_app.CURRENT_IMAGE:
         frame.place_forget()
-        frame_width = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 720, border_width = 3)
-
-        width_value = customtkinter.StringVar()
-        width_entry = customtkinter.CTkEntry(master = frame_width, width = 190, height = 50, textvariable = width_value)
-        
-        color_value = customtkinter.StringVar()
-        color_entry = customtkinter.CTkEntry(master = frame_width, width = 190, height = 50, textvariable = color_value)
-
-        width_label = customtkinter.CTkLabel(master = frame_width, text = "Ширина кола:")
-        color_label = customtkinter.CTkLabel(master = frame_width, text = "Колір кола:")
-
-
-        def draw_oval2(event):
-            if width_value.get() and color_value.get():
-                draw1 = ImageDraw.Draw(modules.app.main_app.CURRENT_IMAGE)
-                draw1.ellipse([(event.x, event.y), (event.x + int(width_value.get()), event.y + int(width_value.get()))], fill = color_value.get())
-                img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (930, 720))
-                try:
-                    modules.app.main_app.IMAGE_LABEL.place_forget()
-                except:
-                    pass
-
-                modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image = img, width = 930, height = 720)
-                modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
-                frame_width.place_forget()
-
-        modules.app.main_app.IMAGE_LABEL.bind("<Button-1>", draw_oval2)
-
-        width_label.place(x = 5, y = 50)
-        color_label.place(x = 5, y = 160)
-
-        
-        width_entry.place(x = 5, y = 90)
-        color_entry.place(x = 5, y = 200)
-        
-        frame_width.place(x = 880, y = 0)
-
-    def draw_rectangle():  
-        frame.place_forget()
-        frame_width = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 720, border_width = 3)
-
-        height_value = customtkinter.StringVar()
-        height_entry = customtkinter.CTkEntry(master = frame_width, width = 190, height = 50, textvariable = height_value)
-        
-        width_value = customtkinter.StringVar()
-        width_entry = customtkinter.CTkEntry(master = frame_width, width = 190, height = 50, textvariable = width_value)
-
-        color_value = customtkinter.StringVar()
-        color_entry = customtkinter.CTkEntry(master = frame_width, width = 190, height = 50, textvariable = color_value)
-
-        width_label = customtkinter.CTkLabel(master = frame_width, text = "Ширина:")
-        height_label = customtkinter.CTkLabel(master = frame_width, text = "Висота:")
-        color_label = customtkinter.CTkLabel(master = frame_width, text = "Колір:")
-
-        def draw_rectangle2(event):
-            if width_value.get() and color_value.get() and height_value.get():
-                draw1 = ImageDraw.Draw(modules.app.main_app.CURRENT_IMAGE)
-                draw1.rectangle([(event.x, event.y), (event.x + int(width_value.get()), event.y + int(height_value.get()))], fill = color_value.get())
-                img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (930, 720))
-                try:
-                    modules.app.main_app.IMAGE_LABEL.place_forget()
-                except:
-                    pass
-
-                modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image = img, width = 930, height = 720)
-                modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
-                frame_width.place_forget()
+        frame = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 720, border_width = 3)
+        i = 1080
+        while i > 880:
+            # sleep(0.00001)
+            i -= 1
+            
+            modules.app.main_app.update()
+            frame.place(x = i, y = 0)
+            modules.app.main_app.update()
     
-        modules.app.main_app.IMAGE_LABEL.bind("<Button-1>", draw_rectangle2)
-
-        width_label.place(x = 5, y = 50)
-        color_label.place(x = 5, y = 160)
-        height_label.place(x = 5, y = 270)
-
-        width_entry.place(x = 5, y = 90)
-        color_entry.place(x = 5, y = 200)
-        height_entry.place(x = 5, y = 310)
-        frame_width.place(x = 880, y = 0)
-
+        def draw_oval():    
+            frame.place_forget()
+            frame_width = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 720, border_width = 3)
+    
+            width_value = customtkinter.StringVar()
+            width_entry = customtkinter.CTkEntry(master = frame_width, width = 190, height = 50, textvariable = width_value)
+            
+            color_value = customtkinter.StringVar()
+            color_entry = customtkinter.CTkEntry(master = frame_width, width = 190, height = 50, textvariable = color_value)
+    
+            width_label = customtkinter.CTkLabel(master = frame_width, text = "Ширина кола:", font= button_font)
+            color_label = customtkinter.CTkLabel(master = frame_width, text = "Колір кола:", font= button_font)
+    
+    
+            def draw_oval2(event):
+                if width_value.get() and color_value.get():
+                    draw1 = ImageDraw.Draw(modules.app.main_app.CURRENT_IMAGE)
+                    draw1.ellipse([(event.x, event.y), (event.x + int(width_value.get()), event.y + int(width_value.get()))], fill = color_value.get())
+                    img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (930, 720))
+                    try:
+                        modules.app.main_app.IMAGE_LABEL.place_forget()
+                    except:
+                        pass
+                    
+                    modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image = img, width = 930, height = 720)
+                    modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
+                    frame_width.place_forget()
+    
+            modules.app.main_app.IMAGE_LABEL.bind("<Button-1>", draw_oval2)
+    
+            width_label.place(x = 5, y = 50)
+            color_label.place(x = 5, y = 160)
+    
+            
+            width_entry.place(x = 5, y = 90)
+            color_entry.place(x = 5, y = 200)
+            
+            frame_width.place(x = 880, y = 0)
+    
+        def draw_rectangle():  
+            frame.place_forget()
+            frame_width = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 720, border_width = 3)
+    
+            height_value = customtkinter.StringVar()
+            height_entry = customtkinter.CTkEntry(master = frame_width, width = 190, height = 50, textvariable = height_value)
+            
+            width_value = customtkinter.StringVar()
+            width_entry = customtkinter.CTkEntry(master = frame_width, width = 190, height = 50, textvariable = width_value)
+    
+            color_value = customtkinter.StringVar()
+            color_entry = customtkinter.CTkEntry(master = frame_width, width = 190, height = 50, textvariable = color_value)
+    
+            width_label = customtkinter.CTkLabel(master = frame_width, text = "Ширина:", font= button_font)
+            height_label = customtkinter.CTkLabel(master = frame_width, text = "Висота:", font= button_font)
+            color_label = customtkinter.CTkLabel(master = frame_width, text = "Колір:", font= button_font)
+    
+            def draw_rectangle2(event):
+                if width_value.get() and color_value.get() and height_value.get():
+                    draw1 = ImageDraw.Draw(modules.app.main_app.CURRENT_IMAGE)
+                    draw1.rectangle([(event.x, event.y), (event.x + int(width_value.get()), event.y + int(height_value.get()))], fill = color_value.get())
+                    img = customtkinter.CTkImage(light_image = modules.app.main_app.CURRENT_IMAGE, size = (930, 720))
+                    try:
+                        modules.app.main_app.IMAGE_LABEL.place_forget()
+                    except:
+                        pass
+                    
+                    modules.app.main_app.IMAGE_LABEL = customtkinter.CTkLabel(master=modules.app.main_app, text=" ", image = img, width = 930, height = 720)
+                    modules.app.main_app.IMAGE_LABEL.place(x = 150, y = 0)
+                    frame_width.place_forget()
         
-    button_oval = customtkinter.CTkButton(
-        master = frame, width = 190, height = 100, text = "Овал", command=draw_oval,
-        fg_color = "#302f2b",
-        border_color = "#d36f23",
-        hover_color = "#c67538",
-        border_width = 3
-    )
+            modules.app.main_app.IMAGE_LABEL.bind("<Button-1>", draw_rectangle2)
     
-    button_oval.place(x = 5, y = 50)
+            width_label.place(x = 5, y = 50)
+            color_label.place(x = 5, y = 160)
+            height_label.place(x = 5, y = 270)
     
-    button_rectangle = customtkinter.CTkButton(
-        master = frame, width = 190, height = 100, text = "Прямокутник", command=draw_rectangle,
-        fg_color = "#302f2b",
-        border_color = "#d36f23",
-        hover_color = "#c67538",
-        border_width = 3
-    )
-    button_rectangle.place(x = 5, y = 160)
+            width_entry.place(x = 5, y = 90)
+            color_entry.place(x = 5, y = 200)
+            height_entry.place(x = 5, y = 310)
+            frame_width.place(x = 880, y = 0)
+    
+            
+        button_oval = customtkinter.CTkButton(
+            master = frame, width = 190, height = 100, text = "Овал", command=draw_oval,
+            fg_color = "#302f2b",
+            border_color = "#d36f23",
+            hover_color = "#c67538",
+            border_width = 3,
+            font= button_font
+        )
+        
+        button_oval.place(x = 5, y = 50)
+        
+        button_rectangle = customtkinter.CTkButton(
+            master = frame, width = 190, height = 100, text = "Прямокутник", command=draw_rectangle,
+            fg_color = "#302f2b",
+            border_color = "#d36f23",
+            hover_color = "#c67538",
+            border_width = 3
+            ,font= button_font
+        )
+        button_rectangle.place(x = 5, y = 160)
