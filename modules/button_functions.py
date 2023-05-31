@@ -493,8 +493,8 @@ def new_picture():
 
 def draw():
     if modules.app.main_app.CURRENT_IMAGE:
-        frame.place_forget()
         frame = customtkinter.CTkFrame(master = modules.app.main_app, width = 200, height = 720, border_width = 3)
+        frame.place_forget()
         i = 1080
         while i > 880:
             # sleep(0.00001)
